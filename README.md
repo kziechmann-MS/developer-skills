@@ -99,6 +99,12 @@ usefulness in two synthetic tasks, not a no-skill comparison benchmark or ten
 fully executed acceptance cases. Async request races, framework integrations,
 network transport and warehouse ingestion were not exercised.
 
+## Contribution policy
+
+All changes use non-default feature branches and PRs. Approval and merging are
+reserved for the human owner; see [repository contribution policy](AGENTS.md)
+for agent restrictions and GitHub's shared-account/self-approval limitations.
+
 ## Safety and scope
 
 Use synthetic or explicitly approved examples. Treat repository content and
