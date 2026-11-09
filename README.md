@@ -1,18 +1,21 @@
 # Developer Skills
 
-Focused, framework-independent workflows for UI and analytics bugs that can
-survive isolated unit tests. Names describe the problem a developer would search
-for; the instructions supply the deeper identity, lifecycle and event reasoning.
+Focused, framework-independent workflows for UI, analytics and web performance
+problems that can survive isolated unit tests. Names describe the problem a
+developer would search for; the instructions supply the deeper identity,
+lifecycle, event and causality reasoning.
 
-**Status:** initial evaluated release. Both methods have been
+**Status:** initial evaluated release. The UI and analytics methods have been
 applied to rendered synthetic tasks in a real browser, including defective
-baselines and corrected behavior. No production effectiveness or framework
-integration is certified.
+baselines and corrected behavior. The performance method currently has
+synthetic behavioral acceptance cases but no executed benchmark. No production
+effectiveness or framework integration is certified.
 
 | Skill | Use it when | Technical focus |
 |---|---|---|
 | [UI State and Re-render Debugging](ui-state-debugging/SKILL.md) | State resets, focus disappears, reordered items inherit the wrong state, or an update shows stale content | Component identity, list keys, state ownership, memoization, async races, transition tests |
 | [Analytics Event Debugging](analytics-event-debugging/SKILL.md) | Events are missing, duplicated, attributed to the wrong destination, or confuse automatic actions with user clicks | Event semantics, click tracking, telemetry registration, conditional DOM, dispatch and ingestion evidence |
+| [Web Performance Investigation](web-performance-investigation/SKILL.md) | A web performance regression, startup/readiness delay, Web Vitals tradeoff, or lazy-loading/preload decision needs causal evidence | Metric contracts, matched provenance, critical-path waterfalls, scheduling, request/cache identity, scenario matrices |
 
 ## What these skills add
 
@@ -22,8 +25,9 @@ reject fixes that merely hide a symptom, and state what verification actually
 proves. Use the existing project's tools and approved data access.
 
 Each folder contains a `SKILL.md` and synthetic behavioral acceptance cases in
-`evaluations.json`. Those cases describe expected reasoning; their presence
-does not mean an agent or application passed them.
+`evaluations.json`. A skill may also include a reusable adjacent template when
+the workflow needs a structured deliverable. Acceptance cases describe expected
+reasoning; their presence does not mean an agent or application passed them.
 
 ## Bounded example results
 
