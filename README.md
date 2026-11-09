@@ -1,21 +1,24 @@
 # Developer Skills
 
 Focused, framework-independent workflows for feature integration, generative AI
-UI development, UI state and analytics. Names describe problems a developer would
-search for; the instructions supply ownership, authority, identity, lifecycle
-and boundary-level verification.
+UI development, UI state, analytics and web performance. Names describe problems
+a developer would search for; the instructions supply ownership, authority,
+identity, lifecycle, causality and boundary-level verification.
 
 **Status:** the two existing debugging skills have prior bounded synthetic
-browser evidence. The two new development skills are review candidates with
-locally executed offline Node and Chrome examples. Their authored agent
-acceptance cases have not been run as agent evaluations. Independent content,
+browser evidence. The performance skill has synthetic behavioral acceptance
+cases but no executed benchmark. The two development skills are review
+candidates with locally executed offline Node and Chrome examples; their
+authored cases have not been run as agent evaluations. Independent content,
 security and permission/IP review remain release gates; local tests do not
-authorize publication. No production effectiveness is certified.
+authorize publication. No production effectiveness or framework integration is
+certified.
 
 | Skill | Use it when | Technical focus |
 |---|---|---|
 | [UI State and Re-render Debugging](ui-state-debugging/SKILL.md) | State resets, focus disappears, reordered items inherit the wrong state, or an update shows stale content | Component identity, list keys, state ownership, memoization, async races, transition tests |
 | [Analytics Event Debugging](analytics-event-debugging/SKILL.md) | Events are missing, duplicated, attributed to the wrong destination, or confuse automatic actions with user clicks | Event semantics, click tracking, telemetry registration, conditional DOM, dispatch and ingestion evidence |
+| [Web Performance Investigation](web-performance-investigation/SKILL.md) | A web performance regression, startup/readiness delay, Web Vitals tradeoff, or lazy-loading/preload decision needs causal evidence | Metric contracts, matched provenance, critical-path waterfalls, scheduling, request/cache identity, scenario matrices |
 | [API-to-UI Feature Integration](api-to-ui-feature-integration/SKILL.md) | An existing-app feature crosses service config, adapters, state, host registration and rendering | Policy authority, actual forwarding, two-caller compatibility, stored/incremental paths, delayed readiness and vertical-slice proof |
 | [Generative AI UI Development](generative-ui-development/SKILL.md) | Build interfaces and middle-tier services that incorporate LLMs | Model-use decisions, authorized orchestration, deterministic shaping, versioned UI descriptions, trusted component/action registries and lifecycle |
 
@@ -27,10 +30,11 @@ tempting proxies for correctness, and state what verification actually proves.
 Use the existing project's tools, installed versions and approved data access.
 
 Each folder contains a `SKILL.md` and synthetic behavioral acceptance cases in
-`evaluations.json`. Those cases describe expected reasoning; their presence
-does not mean an agent or application passed them.
+`evaluations.json`. A skill may also include a reusable adjacent template when
+the workflow needs a structured deliverable. Acceptance cases describe expected
+reasoning; their presence does not mean an agent or application passed them.
 
-The new skills also have progressively loaded references and independent
+The two development skills also have progressively loaded references and independent
 runnable examples. API integration is not a generic architecture-documentation
 generator: it checks reachability and compatibility in an existing app.
 Generative UI is a separate frontend-plus-middle-tier skill, not an integration

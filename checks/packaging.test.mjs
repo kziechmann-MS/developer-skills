@@ -7,10 +7,11 @@ import { fileURLToPath } from 'node:url';
 const root = fileURLToPath(new URL('../', import.meta.url));
 const skills = [
   'ui-state-debugging', 'analytics-event-debugging',
+  'web-performance-investigation',
   'api-to-ui-feature-integration', 'generative-ui-development',
 ];
 
-test('all four skills have discoverable frontmatter and matching rubrics', async () => {
+test('all five skills have discoverable frontmatter and matching rubrics', async () => {
   for (const name of skills) {
     const text = await readFile(join(root, name, 'SKILL.md'), 'utf8');
     const header = text.match(/^---\r?\nname: ([a-z0-9-]+)\r?\ndescription: ([^\r\n]+)\r?\n---/);
