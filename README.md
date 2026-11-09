@@ -60,9 +60,9 @@ Each skill's example README describes frozen criteria, contracts and exclusions.
 
 ### Executed development-example evidence
 
-On Node 22.23.4, the combined boundary command passed all 31 reported tests
-(18 top-level tests plus 13 nested subtests). The optional real Chrome headless
-check passed 14 DOM/interaction assertions using those same implementation
+On Node 22.23.4, the combined boundary command passed all 34 reported tests
+(21 top-level tests plus 13 nested subtests). The optional real Chrome headless
+check passed 15 DOM/interaction assertions using those same implementation
 modules. Three packaging checks also passed: skill metadata/evaluation JSON,
 fixture references and local Markdown links. These are separate from application
 behavior.

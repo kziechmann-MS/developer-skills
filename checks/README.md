@@ -17,7 +17,8 @@ The page's content security policy disallows connections and external content.
 
 The browser imports the same implementation modules as the Node tests. It checks
 actual delayed registry mounting, two callers, emitted IDs, stable DOM identity
-through a title update, atomic completion, a real button handler's server-side
+through a title update, current-model restoration into a distinct replacement
+root without duplicate result emission, atomic completion, a real button handler's server-side
 reservation effect, safe plain-text rendering, stale suppression, unsupported
 component rejection, cancellation and disposal.
 

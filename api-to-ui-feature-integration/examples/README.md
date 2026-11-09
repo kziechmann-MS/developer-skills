@@ -13,6 +13,9 @@ accessibility prioritization; the sidebar omits it. The service, not a client
 sort, chooses from the full candidate set. Saved responses and incremental
 batches reuse the validated projection. Batch merge replaces existing IDs in
 place and appends new IDs; it is not a network streaming protocol.
+Replacing a registered host restores the owner's current model into the new
+renderer without emitting another data-result event. Loading and disposed
+owners do not restore obsolete data into a replacement.
 
 ## Frozen acceptance criteria
 
@@ -24,7 +27,7 @@ place and appends new IDs; it is not a network streaming protocol.
 | Superseded/disposed work | Controlled late completion cannot render or emit |
 | Stored/incremental | Stable IDs, changed title, new event and duplicate rejection through the owner |
 | Invalid data/config | Explicit error and sanitized diagnostic, no successful empty result |
-| False/re-registration | Default policy is preserved and registration alone does not re-emit |
+| False/re-registration | Default policy is preserved; a distinct replacement renderer receives current data without a duplicate result event; loading/disposed owners do not restore stale data |
 | Repeated failure/in-flight work | Diagnostics describe the current failure and invalid incremental work cannot be overwritten by an older pending load |
 
 These are application boundary checks, not agent reasoning scores or a
@@ -32,7 +35,8 @@ with/without-skill comparison. The negative control is a deliberately defective
 adapter, not an unassisted agent.
 
 The optional shared browser check in `checks` exercises the exported renderer
-against real DOM nodes. Node tests use observable render callbacks and do not
+against real DOM nodes, including replacing the root and restoring its current
+model without duplicate result emission. Node tests use observable render callbacks and do not
 alone prove DOM behavior. No framework, production transport, persistent
 storage, real stream assembly, telemetry ingestion, accessibility certification
 or performance claim is covered.

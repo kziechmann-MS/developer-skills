@@ -102,7 +102,8 @@ export function createFeature({ placementId, adapter, registry, emit, diagnose }
   }
 
   function flush() {
-    if (!pending || state.phase === 'disposed') return;
+    const model = pending?.model ?? state.model;
+    if (!model || state.phase === 'disposed') return;
     const render = registry.get(placementId);
     if (!render) {
       state.phase = 'waiting';
@@ -111,14 +112,16 @@ export function createFeature({ placementId, adapter, registry, emit, diagnose }
     const result = pending;
     pending = null;
     try {
-      render(structuredClone(result.model));
-      emit({
-        type: 'events-rendered',
-        placementId,
-        source: result.source,
-        eventIds: result.model.events.map(event => event.id),
-      });
-      state = { phase: 'ready', model: result.model, errorCode: null };
+      render(structuredClone(model));
+      if (result) {
+        emit({
+          type: 'events-rendered',
+          placementId,
+          source: result.source,
+          eventIds: result.model.events.map(event => event.id),
+        });
+      }
+      state = { phase: 'ready', model, errorCode: null };
     } catch (error) {
       fail(error);
       throw error;

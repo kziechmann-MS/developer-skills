@@ -78,7 +78,7 @@ try {
   if (!match || match[1] === 'pending') throw new Error('Browser did not finish the fixture module.');
   const decoded = match[1].replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&');
   const result = JSON.parse(decoded);
-  if (result.status !== 'passed' || !Array.isArray(result.checks) || result.checks.length !== 14) {
+  if (result.status !== 'passed' || !Array.isArray(result.checks) || result.checks.length !== 15) {
     throw new Error(`Browser fixture failed or omitted checks: ${JSON.stringify(result)}`);
   }
   console.log(JSON.stringify({ browser: 'Chrome headless', ...result }, null, 2));

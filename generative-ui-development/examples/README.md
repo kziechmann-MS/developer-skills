@@ -21,6 +21,10 @@ capability list and an abort signal. It returns an async iterable of
 This is a fixture protocol, not an actual provider API. One model call, no retry,
 at most 16 chunks, 4096 output characters, 1000 prompt characters and 1000 ms
 local deadline are the defaults. Tests override limits to probe failure.
+After yielding loading, the orchestrator rechecks cancellation and current
+request applicability immediately before invoking the adapter. Cancellation,
+supersession or deadline expiry during that suspension must dispatch no model
+work, rather than merely rejecting its result afterward.
 
 The complete model document is:
 
@@ -59,6 +63,7 @@ returning a cached result. A new request invalidates the old request's actions.
 | Valid vertical slice | Injected output -> authorized shaping -> client document -> server action decrements seats |
 | Invalid output | Malformed JSON, version/component/action/field errors, duplicates and unknown events do not render |
 | Partial | Two incomplete chunks render no components; complete document renders once |
+| Loading suspension | Consuming loading, then cancelling/superseding/expiring before resumption invokes the eager adapter zero times; a superseding request still completes normally |
 | Stale/cancelled | Supersession and cancellation prevent ready output; late provider result cannot revive it |
 | Client boundary | Request/sequence checks, independent document validation and disposal |
 | Authorization | Forged capability/principal/revision, revoked membership, stale request and duplicate writes |

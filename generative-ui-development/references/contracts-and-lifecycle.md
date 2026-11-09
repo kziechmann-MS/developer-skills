@@ -30,6 +30,7 @@ to safe rich HTML or arbitrary URL handling.
 | State/transition | Expected behavior | Failure probe |
 |---|---|---|
 | Loading | Correlated request, explicit activity, defined old-content policy | Start a second request before the first resolves |
+| Loading suspension -> dispatch | Recheck cancellation, deadline and current-request applicability immediately before invoking the adapter | Consume loading, cancel/supersede/expire while suspended, resume and assert zero adapter invocations |
 | Partial | Status or validated bounded snapshot; no executable fragments | Stop halfway through JSON |
 | Ready | Validated version/capabilities and authoritative data | Invent availability or an unknown event ID |
 | Invalid/unsupported | Diagnostic and explicit non-success outcome | Malformed JSON, duplicate IDs, unknown version/component/action |

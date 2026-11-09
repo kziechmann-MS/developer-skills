@@ -31,7 +31,7 @@ try {
   await loadSidebar(page);
   await loadPage(page);
   verify('data waits for actual host registration', page.state.phase === 'waiting' && pageRoot.children.length === 0);
-  registry.register('page', createEventRenderer(pageRoot));
+  const unregisterPage = registry.register('page', createEventRenderer(pageRoot));
   registry.register('sidebar', createEventRenderer(sidebarRoot));
   await loadSidebar(sidebar);
   verify('two callers reach service with distinct config',
@@ -48,6 +48,17 @@ try {
   page.append({ version: 1, events: [{ ...saved.events[0], title: 'River cleanup - new start time' }] });
   verify('incremental title updates preserve actual entity node',
     pageRoot.firstElementChild === riverNode && riverNode.textContent === 'River cleanup - new start time');
+  const emissionsBeforeReplacement = emitted.length;
+  unregisterPage();
+  const replacementRoot = pageRoot.cloneNode(false);
+  pageRoot.replaceWith(replacementRoot);
+  registry.register('page', createEventRenderer(replacementRoot));
+  verify('replacement host restores current model without a new result event',
+    replacementRoot !== pageRoot && replacementRoot.children.length === 1 &&
+    replacementRoot.firstElementChild !== riverNode &&
+    replacementRoot.firstElementChild.dataset.eventId === 'event-river' &&
+    replacementRoot.firstElementChild.textContent === 'River cleanup - new start time' &&
+    page.state.phase === 'ready' && emitted.length === emissionsBeforeReplacement);
   page.dispose();
   sidebar.dispose();
 

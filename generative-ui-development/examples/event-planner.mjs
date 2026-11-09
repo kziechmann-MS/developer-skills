@@ -160,6 +160,8 @@ export function createOrchestrator({ generate, store, diagnose, limits = {} }) {
         timer = setTimeout(() => entry.controller.abort(new GenerationError('TIMEOUT')), budget.deadlineMs);
         if (entry.controller.signal.aborted) throw entry.controller.signal.reason;
         yield envelope('loading');
+        if (entry.controller.signal.aborted) throw entry.controller.signal.reason;
+        check(latest.get(principal.id) === requestId, 'STALE');
         iterator = generate({
           prompt, eventIds: store.visibleIds(principal),
           capabilities: ['event-card', 'reserve'], signal: entry.controller.signal,

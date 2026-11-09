@@ -135,10 +135,28 @@ test('false retains default policy and re-registration does not duplicate emissi
   const unregister = fixture.register();
   await fixture.feature.refresh({ limit: 1, prioritizeAccessible: false });
   unregister();
-  fixture.register();
+  const replacement = [];
+  const unregisterReplacement = fixture.registry.register('page', model => replacement.push(model));
   assert.equal(fixture.rendered.length, 1);
   assert.equal(fixture.rendered[0].events[0].id, 'event-river');
+  assert.deepEqual(replacement, fixture.rendered);
+  assert.equal(fixture.feature.state.phase, 'ready');
   assert.equal(fixture.emitted.length, 1);
+
+  unregisterReplacement();
+  const loading = loadPage(fixture.feature);
+  const current = [];
+  const unregisterCurrent = fixture.registry.register('page', model => current.push(model));
+  assert.equal(current.length, 0);
+  await loading;
+  assert.equal(current[0].events[0].id, 'event-garden');
+  assert.equal(fixture.emitted.length, 2);
+  unregisterCurrent();
+  fixture.feature.dispose();
+  const disposed = [];
+  fixture.registry.register('page', model => disposed.push(model));
+  assert.equal(disposed.length, 0);
+  assert.equal(fixture.emitted.length, 2);
 });
 
 test('new failures update diagnostics and invalidate pending work', async () => {

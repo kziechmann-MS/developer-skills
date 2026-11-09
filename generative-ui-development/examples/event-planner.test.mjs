@@ -126,6 +126,51 @@ test('partial output commits only at completion', async () => {
   assert.equal((await run.stream.next()).done, true);
 });
 
+test('cancellation during loading suspension skips adapter dispatch', async () => {
+  let calls = 0;
+  const fixture = setup({ generate: () => { calls++; return output(plan())(); } });
+  const controller = new AbortController();
+  const run = fixture.orchestrator.start(member(), { signal: controller.signal });
+  assert.equal((await run.stream.next()).value.status, 'loading');
+  controller.abort();
+  const messages = [];
+  for await (const message of run.stream) messages.push(message);
+  assert.deepEqual(messages.map(message => [message.status, message.code]), [['cancelled', 'CANCELLED']]);
+  assert.equal(calls, 0);
+});
+
+test('supersession during loading suspension skips old adapter dispatch', async () => {
+  const prompts = [];
+  const fixture = setup({ generate: input => { prompts.push(input.prompt); return output(plan())(); } });
+  const principal = member();
+  const old = fixture.orchestrator.start(principal, { prompt: 'Old request' });
+  assert.equal((await old.stream.next()).value.status, 'loading');
+  const current = fixture.orchestrator.start(principal, { prompt: 'Current request' });
+  const oldMessages = [];
+  for await (const message of old.stream) oldMessages.push(message);
+  const callsBeforeCurrent = prompts.length;
+  const currentMessages = [];
+  for await (const message of current.stream) currentMessages.push(message);
+  assert.deepEqual(oldMessages.map(message => [message.status, message.code]), [['stale', 'STALE']]);
+  assert.equal(currentMessages.at(-1).status, 'ready');
+  assert.equal(callsBeforeCurrent, 0);
+  assert.deepEqual(prompts, ['Current request']);
+});
+
+test('deadline during loading suspension skips adapter dispatch', { timeout: 2000 }, async () => {
+  let calls = 0;
+  const fixture = setup({
+    generate: () => { calls++; return output(plan())(); }, limits: { deadlineMs: 10 },
+  });
+  const run = fixture.orchestrator.start(member());
+  assert.equal((await run.stream.next()).value.status, 'loading');
+  await new Promise(resolve => setTimeout(resolve, 20));
+  const messages = [];
+  for await (const message of run.stream) messages.push(message);
+  assert.deepEqual(messages.map(message => [message.status, message.code]), [['error', 'TIMEOUT']]);
+  assert.equal(calls, 0);
+});
+
 test('superseded and cancelled work cannot become ready', async () => {
   const gate = deferred();
   let calls = 0;

@@ -26,6 +26,7 @@ not proof that the real adapter sends it.
 | Saved result | Persisted version and IDs | Validated projection | Decode -> owner -> registered render |
 | Incremental batch | Existing and new IDs | Documented merge policy | Updated existing entity, added entity, duplicate rejection |
 | Before host registration | Placement ID separate from event ID | Wait, then render once | Real registry transition |
+| Replacement host | Current model survives a host change | Restore into the new host without a new data-result event | Distinct renderer/root receives current data; emitted result count is unchanged |
 | Superseded request | Request identity separate from entity | Older completion ignored | Controlled completion order |
 | After disposal | No active owner | No render/emission | Resolve pending work after disposal |
 | Failure | Invalid response or missing field | Explicit failure/diagnostic | No success-shaped empty fallback |
@@ -48,6 +49,9 @@ project's stream assembly, ordering and cancellation separately.
   it unverified.
 - Data load completes: delay registration, supersede the request and dispose
   the owner; data readiness is not host readiness.
+- Result rendered once: replace the host with a distinct renderer/root and
+  verify the current model is restored without treating host restoration as a
+  new data result. Cumulative callbacks alone can hide a blank replacement.
 
 ## Rejected shortcuts
 
