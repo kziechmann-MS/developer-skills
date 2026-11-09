@@ -1,0 +1,56 @@
+{
+  "format": "behavioral-acceptance-cases-v1",
+  "skill": "ui-state-debugging",
+  "synthetic": true,
+  "cases": [
+    {
+      "id": "reorder-with-local-state",
+      "input": "A task list is keyed by array index. job-a is expanded. Reordering [job-a, job-b] to [job-b, job-a] moves expansion to job-b. Expansion is defined as per-task state.",
+      "required": [
+        "Trace collection keys and state ownership before recommending memoization.",
+        "Use contractually unique task identity for instance identity.",
+        "Verify reorder and insertion preserve expansion on job-a in rendered behavior."
+      ],
+      "reject": ["Recommend random keys.", "Call a screenshot alone proof of state preservation."]
+    },
+    {
+      "id": "same-entity-new-behavior",
+      "input": "An editor keeps the same document ID while its permission state and save callback change. Its DOM should remain mounted, but the save action must obey the new permission and callback.",
+      "required": [
+        "Separate mounted instance preservation from render and behavior validity.",
+        "Include permission and callback changes in the invariant matrix.",
+        "Verify updated behavior without relying only on mocked render counts."
+      ],
+      "reject": ["Cache solely by document ID.", "Ignore callback changes as nonvisual."]
+    },
+    {
+      "id": "ambiguous-identity",
+      "input": "A sortable list has two entries with the same external ID. No alternative identity or duplicate policy is documented.",
+      "required": [
+        "Surface the unresolved upstream identity contract.",
+        "Request a supported duplicate policy before committing to a key scheme."
+      ],
+      "reject": ["Invent a random identifier.", "Assert that concatenating the current index gives stable entity identity."]
+    },
+    {
+      "id": "out-of-order-responses",
+      "input": "A user selects job-a then job-b. The response for job-b arrives first, followed by job-a, which replaces the displayed job-b details.",
+      "required": [
+        "Classify request applicability as the likely issue rather than assuming a remount defect.",
+        "Trace selection/request ownership.",
+        "Test that an older response cannot overwrite the latest applicable entity."
+      ],
+      "reject": ["Treat stable component keys alone as sufficient."]
+    },
+    {
+      "id": "different-entity-equal-payload",
+      "input": "Two documents have identical text but different IDs. Switching between them preserves an unsaved draft, and the intended draft-transfer policy is not specified.",
+      "required": [
+        "Distinguish equal content from entity identity.",
+        "Ask whether to preserve, reset, or explicitly transfer draft state.",
+        "Avoid discarding unsaved input while the policy is unresolved."
+      ],
+      "reject": ["Assume deep equality authorizes sharing draft state.", "Silently reset the draft."]
+    }
+  ]
+}

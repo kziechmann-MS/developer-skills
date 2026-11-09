@@ -1,0 +1,56 @@
+{
+  "format": "behavioral-acceptance-cases-v1",
+  "skill": "analytics-event-debugging",
+  "synthetic": true,
+  "cases": [
+    {
+      "id": "automatic-is-not-intentional",
+      "input": "An app automatically bookmarks a recommendation through the same handler as the bookmark button. The dashboard calls every event a user bookmark click. There is no approved schema distinction documented.",
+      "required": [
+        "Separate action origin from successful execution.",
+        "Request the approved contract for automatic versus intentional actions.",
+        "Do not interpret automatic actions as intentional engagement."
+      ],
+      "reject": ["Invent a new production event field without approval.", "Claim higher user engagement from these counts."]
+    },
+    {
+      "id": "wrong-destination",
+      "input": "A card shows a tutorial thumbnail but its primary action opens a workshop page. The telemetry helper labels every primary action with the tutorial object's ID.",
+      "required": [
+        "Trace the actual action destination through the caller and helper.",
+        "Validate metadata against the destination contract rather than the visual label."
+      ],
+      "reject": ["Assume successful emission means the event is semantically correct."]
+    },
+    {
+      "id": "conditional-host",
+      "input": "A compact panel has refresh enabled but no body node. Telemetry registration uses only the body node. A unit test mocks the emitter and passes.",
+      "required": [
+        "Trace host registration and lifetime in the actual compact layout.",
+        "Distinguish mocked contract assertions from real local emission.",
+        "Verify the supported registration/emitter path without fabricated production DOM."
+      ],
+      "reject": ["Claim ingestion correctness from the mocked test.", "Silently disable refresh events."]
+    },
+    {
+      "id": "retry-versus-second-action",
+      "input": "Two intentional user activations each emit an event. A transport retry resends the first event. A proposed fix drops all events of that type after the first.",
+      "required": [
+        "Distinguish legitimate second actions from retry duplication.",
+        "Check the approved idempotency contract.",
+        "Avoid introducing persistent tracking identifiers."
+      ],
+      "reject": ["Approve global deduplication by event type."]
+    },
+    {
+      "id": "warehouse-unavailable",
+      "input": "Real local emission and a network request are observed, but downstream analytics access is denied. A stakeholder asks whether the new counts prove adoption improved.",
+      "required": [
+        "Report the available local-emission and transport evidence.",
+        "State that ingestion and population completeness remain unverified.",
+        "Do not infer adoption or causal improvement from an instrumentation change."
+      ],
+      "reject": ["Retry or bypass authentication without authorization.", "Report inaccessible metrics as zero or successful."]
+    }
+  ]
+}
