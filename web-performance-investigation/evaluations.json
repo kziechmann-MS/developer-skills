@@ -1,0 +1,97 @@
+{
+  "format": "behavioral-acceptance-cases-v1",
+  "skill": "web-performance-investigation",
+  "synthetic": true,
+  "cases": [
+    {
+      "id": "unmatched-builds",
+      "input": "A treatment trace is from a newer bundle and a different route configuration than the control. Its custom ready event is 18% earlier.",
+      "required": [
+        "Define the custom readiness metric and required visible state.",
+        "Mark the comparison unmatched and reject a causal claim.",
+        "Request same-build control and treatment runs that differ only in the intended switch."
+      ],
+      "reject": ["Call the treatment an 18% causal improvement.", "Ignore route and bundle drift."]
+    },
+    {
+      "id": "summary-rows-and-outliers",
+      "input": "A workbook combines ten run rows, two failed runs, a median row and a notes footer. A proposed script averages the numeric column and drops the failures.",
+      "required": [
+        "Separate run rows from summaries and footer content.",
+        "Preserve failed runs and candidate identity.",
+        "Report medians and a distribution with explicit exclusion rules."
+      ],
+      "reject": ["Coerce failures to zero.", "Delete outliers because they weaken the result."]
+    },
+    {
+      "id": "preload-duplicates-production-request",
+      "input": "A new preload uses a handcrafted URL and cache key. The normal consumer later calls the production request helper with timezone and filter options, causing a second request.",
+      "required": [
+        "Distinguish discovery, download, evaluation and initialization.",
+        "Compare exact request and cache identity.",
+        "Reuse the production helper and preserve timezone, filter, retry and error semantics."
+      ],
+      "reject": ["Keep a parallel cache for the preload.", "Claim earlier request start proves critical-path improvement."]
+    },
+    {
+      "id": "raf-promise-is-prepaint",
+      "input": "Optional initialization is moved into an async animation-frame callback because the author expects code after await to run after the next paint.",
+      "required": [
+        "Identify the Promise continuation as a pre-paint microtask in the usual event-loop ordering.",
+        "Use and verify a frame-followed-by-task strategy if a true post-paint continuation is required.",
+        "Test control, treatment, ineligible and cancellation/navigation paths."
+      ],
+      "reject": ["Treat an async RAF callback as proof of post-paint execution."]
+    },
+    {
+      "id": "readiness-win-lcp-loss",
+      "input": "A default-off treatment improves a custom readiness median but starts a long initialization task immediately afterward. LCP becomes later and the LCP candidate repaints.",
+      "required": [
+        "Inspect LCP candidate identity and repaint timing.",
+        "Relate the long task to the paint timeline without conflating readiness and LCP.",
+        "Report the readiness improvement and LCP regression as a tradeoff rather than one net win."
+      ],
+      "reject": ["Declare success using only the custom readiness metric.", "Hide the LCP result as an outlier."]
+    },
+    {
+      "id": "authoritative-scenario-inventory",
+      "input": "A startup change passes on one client-rendered route. Configuration also supports server rendering, compact headers, prerendering and alternate child layouts, but the proposal assumes they behave identically.",
+      "required": [
+        "Inventory variants from authoritative routing and configuration.",
+        "Build a scenario matrix including OFF, ON and ineligible behavior.",
+        "Cover hidden documents, navigation and stale/race paths where applicable."
+      ],
+      "reject": ["Infer all variants from the tested route.", "Call unexecuted scenarios validated."]
+    },
+    {
+      "id": "attractive-nonblocking-work",
+      "input": "A trace contains a slow optional-module evaluation. Readiness does not await it, but it overlaps a data request that is the last readiness prerequisite.",
+      "required": [
+        "Determine whether the optional work is blocking, contending, concurrent or fallback behavior.",
+        "Identify the last readiness prerequisite.",
+        "Test whether shifting the optional work changes the critical prerequisite or only resource contention."
+      ],
+      "reject": ["Optimize the longest trace bar without tracing readiness dependencies."]
+    },
+    {
+      "id": "ownership-and-dependency-edge",
+      "input": "One product wants optional content to initialize after primary paint. A proposal adds product policy and a reverse import to a generic loader used by many products.",
+      "required": [
+        "Keep product-specific timing at the experience or consumer boundary.",
+        "Reserve the generic loader for cross-product mechanics.",
+        "Check exact runtime/import edges and prefer injection or a pure module over a new cycle."
+      ],
+      "reject": ["Add the reverse import because broad dependency diagnostics already have unrelated failures."]
+    },
+    {
+      "id": "third-party-blocker",
+      "input": "Matched local runs show the treatment unchanged, while several runs fail because an external test dependency is unavailable. An unrelated baseline test also fails on control.",
+      "required": [
+        "Attribute the external blocker and pre-existing baseline failure separately.",
+        "Do not patch the baseline or broaden the optimization.",
+        "Limit performance claims to the matched evidence actually obtained."
+      ],
+      "reject": ["Change unrelated tests to produce a green run.", "Report the unavailable dependency as treatment success."]
+    }
+  ]
+}
