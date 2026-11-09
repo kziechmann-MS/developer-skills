@@ -1,0 +1,57 @@
+{
+  "format": "behavioral-acceptance-cases-v1",
+  "skill": "api-to-ui-feature-integration",
+  "synthetic": true,
+  "execution": "Authored routing/reasoning rubric, not an agent evaluation run. Runnable example coverage is documented separately in examples/README.md.",
+  "cases": [
+    {
+      "id": "optional-config-two-callers",
+      "input": "A community-events page and sidebar use one adapter. The page wants accessible events first; the sidebar must retain default ordering. The service accepts prioritizeAccessible but selects only one event before returning.",
+      "required": ["Trace both actual callers through the adapter to service selection.", "Forward the option for the page and preserve omission/default for the sidebar.", "Assert outgoing arguments and selected event IDs through the real fixture service."],
+      "reject": ["Sort the single returned event client-side and claim policy parity.", "Treat a matching function signature as proof.", "Enable the option globally."],
+      "fixtureTests": ["two callers preserve explicit and omitted config", "lost forwarding negative control changes selection"]
+    },
+    {
+      "id": "late-registration",
+      "input": "Data arrives before the community-events host registers. A second request supersedes it before registration. The card must show the current result once the real placement becomes available.",
+      "required": ["Separate data readiness, host readiness and request applicability.", "Exercise delayed registration and controlled out-of-order completion.", "Prevent disposed owners from rendering or emitting."],
+      "reject": ["Create a fake production host.", "Poll forever.", "Render the oldest pending response."],
+      "fixtureTests": ["late registry renders only the current result", "disposed and superseded requests cannot render"]
+    },
+    {
+      "id": "stored-is-not-streamed",
+      "input": "Saved event snapshots render correctly. A new incremental batch can rename an existing event and add another event. A reviewer calls saved-path support proof of stream parity.",
+      "required": ["Trace saved and incremental paths separately.", "Specify merge and identity behavior.", "Reject duplicate/missing IDs and distinguish fixture batches from real transport streams."],
+      "reject": ["Claim streaming parity from a restore test.", "Use current array positions as entity identity."],
+      "fixtureTests": ["stored and incremental paths share validated projection"]
+    },
+    {
+      "id": "telemetry-proxy",
+      "input": "The events page shows the right event label, but the emitter might still use a stale event ID. The only existing assertion counts cards.",
+      "required": ["Assert the actual emitted fixture payload's current event and placement IDs.", "Distinguish local emission from transport and ingestion.", "Route a broader event-semantics investigation to analytics-event-debugging."],
+      "reject": ["Claim DOM presence proves telemetry payload accuracy."],
+      "fixtureTests": ["late registry renders only the current result"]
+    },
+    {
+      "id": "unresolved-policy",
+      "input": "Two APIs disagree on whether accessibility preference overrides eligibility. No authoritative policy or approved default is documented.",
+      "required": ["Identify the missing policy owner and decision.", "Stop the policy-changing boundary rather than inventing eligibility behavior.", "Continue only independently safe tracing."],
+      "reject": ["Copy policy into the client.", "Silently choose the more permissive API."],
+      "fixtureTests": []
+    },
+    {
+      "id": "routing-css-only",
+      "input": "Change the events page's border color and spacing without changing data, state or behavior.",
+      "required": ["Do not invoke the integration workflow for CSS-only polish."],
+      "reject": ["Produce an API architecture document for this styling task."],
+      "fixtureTests": []
+    },
+    {
+      "id": "routing-generated-ui",
+      "input": "Build an LLM-backed event planner with tool orchestration and generated component descriptions.",
+      "required": ["Route the LLM middle-tier/client design to generative-ui-development.", "Use this integration skill only for separately scoped existing-app wiring."],
+      "reject": ["Treat generative UI as merely an API adapter mode."],
+      "fixtureTests": []
+    }
+  ]
+}

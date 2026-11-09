@@ -1,0 +1,27 @@
+name: Pull request policy
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review, edited]
+
+permissions: {}
+
+jobs:
+  non-default-pr-source:
+    name: Non-default PR source
+    runs-on: ubuntu-latest
+    steps:
+      - name: Require a non-default source branch
+        shell: bash
+        env:
+          HEAD_BRANCH: ${{ github.head_ref }}
+          DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
+        run: |
+          if [[ -z "$HEAD_BRANCH" || -z "$DEFAULT_BRANCH" ]]; then
+            echo "::error::Source and default branch names are required."
+            exit 1
+          fi
+          if [[ "$HEAD_BRANCH" == "$DEFAULT_BRANCH" ]]; then
+            echo "::error::Pull requests must originate from a non-default branch, including forks."
+            exit 1
+          fi

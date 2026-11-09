@@ -1,0 +1,64 @@
+{
+  "format": "behavioral-acceptance-cases-v1",
+  "skill": "generative-ui-development",
+  "synthetic": true,
+  "execution": "Authored routing/reasoning rubric, not an agent evaluation run. Runnable example coverage is documented separately in examples/README.md.",
+  "cases": [
+    {
+      "id": "complete-middle-tier-client-slice",
+      "input": "Build a community-events planner. A model proposes event-card components for known events. Authoritative titles, seats and visibility are held by a service. A member can reserve an event.",
+      "required": ["Separate model selection from authoritative data shaping.", "Implement versioned UI validation and a trusted registry.", "Implement an independently authorized server action and inspect the resulting domain effect."],
+      "reject": ["Return only a persona or prompt.", "Treat a model-proposed action as permission.", "Embed model-authored executable handlers."],
+      "fixtureTests": ["valid model output reaches client and authorized action"]
+    },
+    {
+      "id": "unsupported-generated-content",
+      "input": "The model emits malformed JSON, an unknown schema version, an unknown component, duplicate event IDs, an arbitrary handler, or a nonexistent event.",
+      "required": ["Reject each unsupported contract explicitly.", "Show a non-success state and sanitized diagnostics.", "Do not execute output or invent records."],
+      "reject": ["Claim schema validation proves authorization.", "Render unknown HTML as a fallback."],
+      "fixtureTests": ["invalid and unsupported output never reaches renderer"]
+    },
+    {
+      "id": "partial-stale-cancelled",
+      "input": "JSON arrives in chunks. The user starts a second request, then cancels it. The first request completes late. The UI must not render partial JSON or revive a cancelled/stale result.",
+      "required": ["Choose and document atomic completion versus incremental snapshots.", "Correlate requests and monotonic sequence/revision.", "Invalidate late work and report cancellation separately."],
+      "reject": ["Parse partial JSON as executable UI.", "Assume transport abort alone prevents stale rendering."],
+      "fixtureTests": ["partial output commits only at completion", "superseded and cancelled work cannot become ready", "client rejects stale sequences and disposed updates"]
+    },
+    {
+      "id": "forged-and-replayed-actions",
+      "input": "A viewer forges Reserve intent, reuses another principal's request, and replays a previously valid button after membership is revoked. A legitimate member retries one reservation.",
+      "required": ["Reauthorize using trusted server identity and current policy.", "Reject principal mismatch, unsupported capability and obsolete request.", "Make the defined duplicate-write case idempotent without bypassing reauthorization."],
+      "reject": ["Authorize from client roles or model flags.", "Treat a hidden button as access control.", "Claim in-memory idempotency is a distributed transaction."],
+      "fixtureTests": ["forged revoked stale and replayed actions are checked server-side"]
+    },
+    {
+      "id": "bounded-work-and-refusal",
+      "input": "A provider stalls, returns too many chunks, emits oversized content, throws an error, or refuses after a partial answer. No paid calls are authorized for the example.",
+      "required": ["Use bounded injected responses offline.", "Enforce explicit waiting/step/output limits and distinct terminal states.", "Do not retry refusal or authorization failure blindly; distinguish character bounds from spend controls."],
+      "reject": ["Invoke a live model.", "Claim local abort proves provider billing stopped."],
+      "fixtureTests": ["refusal failure incomplete and budgets are explicit", "timeout and cancellation stop local waiting"]
+    },
+    {
+      "id": "version-aware-integration",
+      "input": "A real app pins an older provider SDK but the retrieved example uses a newer structured-output API.",
+      "required": ["Inspect installed version and matching official API documentation.", "State the mismatch and stop the uncertain API boundary if unresolved.", "Avoid automatic package upgrades or new MCP requirements."],
+      "reject": ["Copy the newest API unverified.", "Install a provider SDK without a project need."],
+      "fixtureTests": []
+    },
+    {
+      "id": "routing-deterministic-ui",
+      "input": "Add an accessible-events checkbox that forwards one API option through an existing page adapter. No model is needed.",
+      "required": ["Prefer deterministic code.", "Route ordinary feature wiring to api-to-ui-feature-integration."],
+      "reject": ["Add an LLM to choose a boolean flag."],
+      "fixtureTests": []
+    },
+    {
+      "id": "routing-negative-controls",
+      "input": "Change card shadows, build a headless document-retrieval index, or design a generic deployment pipeline without a generated UI contract.",
+      "required": ["Do not apply this skill solely because a task mentions AI, a frontend, or a backend."],
+      "reject": ["Claim broad RAG, design-polish or infrastructure ownership."],
+      "fixtureTests": []
+    }
+  ]
+}
