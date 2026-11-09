@@ -69,7 +69,7 @@ Reuse production request helpers and caches. Preserve URL/key construction, opti
 
 ### 5. Reason precisely about scheduling
 
-Write the intended event-loop ordering before moving work. Promise continuations queued from an animation-frame callback are microtasks and normally run before the browser paints. When work must occur after a paint, an animation frame followed by a task may be required; verify the target browser behavior rather than relying on helper names.
+Write the intended event-loop ordering before moving work. Inspect when an awaited promise settles: awaiting an already-fulfilled promise (for example, `await Promise.resolve()`) inside an animation-frame callback normally resumes as a microtask before paint. A promise settling in a later task or frame may instead resume after an intervening paint. Neither an async animation-frame callback nor an arbitrary `await` proves post-paint execution. When work must occur after a paint, consider an animation frame followed by a task; verify actual paint ordering in the target browser rather than assuming a helper name guarantees a paint.
 
 Preserve synchronous error handling and lifecycle cancellation where relevant. Exercise hidden documents, stale navigation, unmount and race paths. A delay that helps the happy path but leaks work into a newer navigation is not a valid optimization.
 

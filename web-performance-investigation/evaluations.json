@@ -35,13 +35,18 @@
     },
     {
       "id": "raf-promise-is-prepaint",
-      "input": "Optional initialization is moved into an async animation-frame callback because the author expects code after await to run after the next paint.",
+      "input": "Optional initialization is moved into an async animation-frame callback because the author expects code after await to run after the next paint. The proposal does not specify when the awaited promise settles.",
       "required": [
-        "Identify the Promise continuation as a pre-paint microtask in the usual event-loop ordering.",
-        "Use and verify a frame-followed-by-task strategy if a true post-paint continuation is required.",
+        "Inspect when the awaited promise settles before classifying the continuation relative to paint.",
+        "Distinguish an already-fulfilled promise (for example, await Promise.resolve()), whose continuation normally runs as a microtask before paint, from a promise settling in a later task or frame, whose continuation may run after an intervening paint.",
+        "If post-paint execution is required, consider a frame-followed-by-task strategy and verify actual paint ordering in the target browser rather than relying on helper names.",
         "Test control, treatment, ineligible and cancellation/navigation paths."
       ],
-      "reject": ["Treat an async RAF callback as proof of post-paint execution."]
+      "reject": [
+        "Treat an async RAF callback or an arbitrary await as proof of post-paint execution.",
+        "Classify the continuation as pre-paint without establishing when the awaited promise settles.",
+        "Claim a frame-followed-by-task helper guarantees an intervening paint without target-browser verification."
+      ]
     },
     {
       "id": "readiness-win-lcp-loss",
